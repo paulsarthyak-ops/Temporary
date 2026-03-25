@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cup and Co. | Artisan Coffee House</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-cream: #FDFBF7;
+            --espresso: #1A120B;
+            --latte-gold: #BC9373;
+            --soft-white: rgba(255, 255, 255, 0.9);
+            --transition-smooth: all 1s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-cream);
+            color: var(--espresso);
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .logo { font-family: 'Playfair Display', serif; }
+
+        /* --- Global Animations --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: var(--transition-smooth);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Navigation --- */
+        nav {
+            position: fixed;
+            top: 0; width: 100%;
+            padding: 1.8rem 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: 0.5s ease;
+        }
+
+        nav.scrolled {
+            background: rgba(253, 251, 247, 0.95);
+            padding: 1rem 8%;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.03);
+        }
+
+        .logo { font-size: 1.6rem; font-weight: 700; letter-spacing: 3px; }
+
+        .nav-links { display: flex; list-style: none; gap: 3rem; }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--espresso);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover { color: var(--latte-gold); }
+
+        /* --- Hero Section --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), 
+                        url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            color: white;
+        }
+
+        .hero h1 { font-size: clamp(3.5rem, 12vw, 6rem); margin-bottom: 1rem; }
+
+        /* --- Contact Us Section --- */
+        .contact-section {
+            position: relative;
+            padding: 10rem 10%;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: url('https://images.unsplash.com/photo-1511920170033-f8396924c348?q=80&w=1887&auto=format&fit=crop') no-repeat center center/cover;
+            background-attachment: fixed;
+        }
+
+        .contact-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(26, 18, 11, 0.6);
+        }
+
+        .contact-card {
+            position: relative;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(25px);
+            padding: 4rem;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 100%;
+            max-width: 900px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            color: white;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        }
+
+        .contact-info h2 { font-size: 3rem; margin-bottom: 2rem; color: var(--latte-gold); }
+
+        .contact-form { display: flex; flex-direction: column; gap: 1.5rem; }
+
+        .input-group { position: relative; }
+
+        .input-group input, .input-group textarea {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(255,255,255,0.4);
+            padding: 10px 0;
+            color: white;
+            font-family: inherit;
+            font-size: 1rem;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .input-group input:focus, .input-group textarea:focus {
+            border-color: var(--latte-gold);
+        }
+
+        .submit-btn {
+            background: var(--latte-gold);
+            color: white;
+            padding: 1.2rem;
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.4s;
+            margin-top: 1rem;
+        }
+
+        .submit-btn:hover {
+            background: #a67d5e;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        /* --- Footer --- */
+        footer {
+            padding: 5rem 10%;
+            background: var(--espresso);
+            color: var(--bg-cream);
+            text-align: center;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 850px) {
+            .contact-card { grid-template-columns: 1fr; padding: 2rem; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav id="navbar">
+        <div class="logo">CUP & CO.</div>
+        <ul class="nav-links">
+            <li><a href="#hero">Home</a></li>
+            <li><a href="#menu">Menu</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <header id="hero" class="hero">
+        <div class="reveal">
+            <h1 style="font-style: italic; font-weight: 400;">The Ritual</h1>
+            <p style="letter-spacing: 5px; text-transform: uppercase; font-size: 0.9rem;">Elevated Coffee Culture</p>
+        </div>
+    </header>
+
+    <section id="contact" class="contact-section">
+        <div class="contact-overlay"></div>
+        
+        <div class="contact-card reveal">
+            <div class="contact-info">
+                <h2>Say Hello</h2>
+                <p style="margin-bottom: 2rem; opacity: 0.8;">Whether you have a question about our roasts or want to book our space for an event, we’d love to hear from you.</p>
+                
+                <div style="margin-bottom: 1rem;">
+                    <p style="color: var(--latte-gold); font-weight: 600; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 2px;">Location</p>
+                    <p>123 Espresso Lane, Downtown</p>
+                </div>
+                
+                <div>
+                    <p style="color: var(--latte-gold); font-weight: 600; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 2px;">Hours</p>
+                    <p>Mon — Fri: 7am - 8pm<br>Sat — Sun: 8am - 9pm</p>
+                </div>
+            </div>
+
+            <form class="contact-form">
+                <div class="input-group">
+                    <input type="text" placeholder="Your Name" required>
+                </div>
+                <div class="input-group">
+                    <input type="email" placeholder="Email Address" required>
+                </div>
+                <div class="input-group">
+                    <textarea rows="4" placeholder="How can we help?"></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <p style="letter-spacing: 3px; margin-bottom: 1rem;">CUP & CO.</p>
+        <p style="opacity: 0.5; font-size: 0.8rem;">&copy; 2026 Crafted with Passion.</p>
+    </footer>
+
+    <script>
+        // Intersection Observer for the smooth "Reveal" animation
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+
+        // Navbar scroll behavior
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 100) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html>
