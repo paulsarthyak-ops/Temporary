@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cup & Co. | Brewing Moments</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #c5a059;
+            --dark: #121212;
+            --light-bg: #1a1a1a;
+            --text-gray: #b5b5b5;
+            --transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+
+        body {
+            background-color: var(--dark);
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* --- Custom Cursor --- */
+        #cursor {
+            position: fixed;
+            width: 24px;
+            height: 24px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23c5a059'%3E%3Cpath d='M2 21h18v-2H2M20 8h-2V5h2m0-2H4v10a4 4 0 0 0 4 4h6a4 4 0 0 0 4-4v-3h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z'/%3E%3C/svg%3E") no-repeat center;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+        }
+
+        #cursor-trail {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: var(--gold);
+            border-radius: 50%;
+            opacity: 0.3;
+            pointer-events: none;
+            z-index: 9998;
+            transition: width 0.3s, height 0.3s, opacity 0.3s;
+            filter: blur(4px);
+        }
+
+        /* --- Dramatic Intro --- */
+        #intro-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: black;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            transition: opacity 1.5s ease;
+        }
+
+        .intro-video-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.6;
+            filter: sepia(0.3) brightness(0.7);
+        }
+
+        .intro-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .intro-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 5rem;
+            color: var(--gold);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 2s forwards 1s;
+        }
+
+        .intro-tagline {
+            font-size: 1.2rem;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeIn 2s forwards 2.5s;
+        }
+
+        /* --- Main Website --- */
+        header {
+            padding: 2rem 10%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: absolute;
+            width: 100%;
+            z-index: 100;
+        }
+
+        .logo { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--gold); text-decoration: none; }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 2rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: var(--transition);
+        }
+
+        nav a:hover { color: var(--gold); }
+
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 10%;
+            background: linear-gradient(to right, rgba(18,18,18,1) 30%, rgba(18,18,18,0)), url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&q=80&w=2070') center/cover;
+        }
+
+        .hero-text h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.5rem;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: var(--transition);
+            margin-top: 2rem;
+        }
+
+        .btn:hover {
+            background: var(--gold);
+            color: var(--dark);
+        }
+
+        /* --- Menu Section --- */
+        .section { padding: 8rem 10%; }
+        
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .menu-item {
+            background: var(--light-bg);
+            padding: 2rem;
+            border-bottom: 3px solid transparent;
+            transition: var(--transition);
+        }
+
+        .menu-item:hover {
+            transform: translateY(-10px);
+            border-color: var(--gold);
+        }
+
+        .menu-item h3 { font-family: 'Playfair Display', serif; color: var(--gold); margin-bottom: 0.5rem; }
+        .price { float: right; color: white; }
+
+        /* --- Animations --- */
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .hidden { display: none !important; }
+        .fade-out { opacity: 0; pointer-events: none; }
+    </style>
+</head>
+<body>
+
+    <!-- Custom Cursor Elements -->
+    <div id="cursor"></div>
+    <div id="cursor-trail"></div>
+
+    <!-- Dramatic Intro Overlay -->
+    <div id="intro-overlay">
+        <!-- Using a placeholder coffee visual -->
+        <img class="intro-video-bg" src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&q=80&w=2070" alt="Coffee Pour">
+        <div class="intro-content">
+            <h1 class="intro-logo">Cup & Co.</h1>
+            <p class="intro-tagline">Brewing Moments</p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <header>
+        <a href="#" class="logo">Cup & Co.</a>
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#menu">Menu</a>
+            <a href="#about">About</a>
+            <a href="#events">Events</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </header>
+
+    <section class="hero" id="home">
+        <div class="hero-text">
+            <h1>Artisan Roasts,<br><span style="color: var(--gold);">Timeless Comfort.</span></h1>
+            <p style="color: var(--text-gray); max-width: 500px;">Experience the ritual of the perfect pour in the heart of the city.</p>
+            <a href="#menu" class="btn">Explore Menu</a>
+        </div>
+    </section>
+
+    <section class="section" id="menu">
+        <h2 class="section-title">The Seasonal Collection</h2>
+        <div class="menu-grid">
+            <div class="menu-item">
+                <span class="price">$6.50</span>
+                <h3>Velvet Gold Latte</h3>
+                <p>Double espresso with turmeric-infused milk and honey.</p>
+            </div>
+            <div class="menu-item">
+                <span class="price">$5.00</span>
+                <h3>Ethiopian Pour-Over</h3>
+                <p>Bright, floral notes with a clean citrus finish.</p>
+            </div>
+            <div class="menu-item">
+                <span class="price">$7.25</span>
+                <h3>Midnight Mocha</h3>
+                <p>70% dark cocoa, espresso, and a hint of smoked sea salt.</p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Custom Cursor Logic
+        const cursor = document.getElementById('cursor');
+        const trail = document.getElementById('cursor-trail');
+        let mouseX = 0, mouseY = 0;
+        let trailX = 0, trailY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursor.style.left = mouseX + 'px';
+            cursor.style.top = mouseY + 'px';
+        });
+
+        // Smooth trailing effect
+        function animateTrail() {
+            let speed = 0.15;
+            trailX += (mouseX - trailX) * speed;
+            trailY += (mouseY - trailY) * speed;
+            
+            trail.style.left = trailX + 'px';
+            trail.style.top = trailY + 'px';
+            
+            requestAnimationFrame(animateTrail);
+        }
+        animateTrail();
+
+        // Cursor interactions
+        document.querySelectorAll('a, .btn, .menu-item').forEach(link => {
+            link.addEventListener('mouseenter', () => {
+                trail.style.width = '40px';
+                trail.style.height = '40px';
+                trail.style.opacity = '0.5';
+            });
+            link.addEventListener('mouseleave', () => {
+                trail.style.width = '10px';
+                trail.style.height = '10px';
+                trail.style.opacity = '0.3';
+            });
+        });
+
+        // Intro Sequence Logic
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const intro = document.getElementById('intro-overlay');
+                intro.classList.add('fade-out');
+                // Remove from DOM after transition to save resources
+                setTimeout(() => intro.classList.add('hidden'), 1500);
+            }, 5000); // 5 seconds of dramatic reveal
+        });
+    </script>
+</body>
+</html>
+
